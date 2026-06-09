@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Golongan 1-3A</title>
+    <style>
+        #start-screen{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* tengah vertikal */
+    align-items: center;     /* tengah horizontal */
+}
+
+    h1{
+    font-size: 100px;
+    font-weight: bold;
+}
+        body{
+    background: linear-gradient(135deg,#ec83d0,#878080);
+    min-height:100vh;
+    color:white;
+}
+
+.question-card{
+    width: 93%;
+    margin:40px auto;
+    background: linear-gradient(to bottom, #4A90E2, #8B24AA);
+    color:rgba(255, 120, 120, 0.482);
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 10px 25px rgba(255, 153, 153, 0.338);
+}
+
+
+.option{
+    background:rgba(255, 101, 242, 0.374);
+    transition:0.3s;
+}
+
+.option:hover{
+    transform:scale(1.03);
+}
+
+.correct{
+    background:#4caf4f80 !important;
+    color:rgb(255, 255, 255);
+}
+
+.wrong{
+    background:#f4433680 !important;
+    color:white;
+}
+
+.progress-container{
+    width:100%;
+    height:12px;
+    background:#ddd;
+    border-radius:20px;
+    margin-bottom:15px;
+}
+
+#progress-bar{
+    width:0%;
+    height:100%;
+    background:#4CAF50;
+    border-radius:20px;
+    transition:0.5s;
+}
+
+#timer{
+    font-size:24px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+#start-btn,#restart-btn{
+    padding:12px 25px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:18px;
+}
+
+#start-btn{
+    background:#4CAF50;
+    color:white;
+}
+
+#restart-btn{
+    background:#2196F3;
+    color:white;
+    margin-top:15px;
+}
+        /* Internal CSS */
+        body {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            text-align: center;
+        }
+        .question-card {
+            background: linear-gradient(to bottom, #4A90E2, #aec8ff);
+            color: rgb(2, 1, 1);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 20px;
+        }
+        .question {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .answer {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        .options {
+            display: flex;
+            justify-content: center;
+            flex-direction: column; /* Mengubah arah tampilan menjadi vertikal */
+        }
+        .option {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .option:hover {
+            background-color: #f0f0f0;
+        }
+        </style>
+        </head>
+<body>
+    <div id="start-screen">
+   <h1 id="title">🧪 Quiz Unsur Golongan IA - IIIA</h1>
+    <p>20 Soal • 15 Detik per Soal</p>
+    <button id="start-btn">▶ Mulai Quiz</button>
+</div>
+    <div class="question-card" id="question-card">
+        <div id="quiz-info">
+    <div id="timer">⏳ 15</div>
+
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+</div>
+        <div class="question" id="question">Question goes here</div>
+        <div class="options" id="options">
+            <!-- Options go here -->
+        </div>
+        <div class="answer" id="answer"></div>
+        <button id="restart-btn" style="display:none;">
+    🔄 Main Lagi
+</button>
+    </div>
+    <script>
+        // Internal JavaScript
+        const questions = [
+    {
+        question: "Apa lambang unsur Hidrogen?",
+        options: ["H", "He", "Li", "Na"],
+        answer: "H"
+    },
+    {
+        question: "Hidrogen termasuk golongan berapa?",
+        options: ["1A", "2A", "3A", "8A"],
+        answer: "1A"
+    },
+    {
+        question: "Berapa nomor atom Litium (Li)?",
+        options: ["2", "3", "4", "5"],
+        answer: "3"
+    },
+    {
+        question: "Apa lambang unsur Natrium?",
+        options: ["N", "Na", "Ne", "Ni"],
+        answer: "Na"
+    },
+    {
+        question: "Natrium termasuk golongan berapa?",
+        options: ["1A", "2A", "3A", "7A"],
+        answer: "1A"
+    },
+    {
+        question: "Berapa nomor atom Kalium (K)?",
+        options: ["18", "19", "20", "21"],
+        answer: "19"
+    },
+    {
+        question: "Apa lambang unsur Rubidium?",
+        options: ["Rb", "Ru", "Re", "Ra"],
+        answer: "Rb"
+    },
+    {
+        question: "Sesium (Cs) termasuk golongan berapa?",
+        options: ["1A", "2A", "3A", "6A"],
+        answer: "1A"
+    },
+    {
+        question: "Apa lambang unsur Berilium?",
+        options: ["B", "Be", "Bi", "Br"],
+        answer: "Be"
+    },
+    {
+        question: "Berapa nomor atom Magnesium (Mg)?",
+        options: ["10", "11", "12", "13"],
+        answer: "12"
+    },
+    {
+        question: "Magnesium termasuk golongan berapa?",
+        options: ["1A", "2A", "3A", "4A"],
+        answer: "2A"
+    },
+    {
+        question: "Apa lambang unsur Kalsium?",
+        options: ["Ca", "Cl", "Cr", "Cs"],
+        answer: "Ca"
+    },
+    {
+        question: "Berapa nomor atom Stronsium (Sr)?",
+        options: ["36", "37", "38", "39"],
+        answer: "38"
+    },
+    {
+        question: "Barium termasuk golongan berapa?",
+        options: ["1A", "2A", "3A", "5A"],
+        answer: "2A"
+    },
+    {
+        question: "Apa lambang unsur Boron?",
+        options: ["Bo", "B", "Br", "Ba"],
+        answer: "B"
+    },
+    {
+        question: "Boron termasuk golongan berapa?",
+        options: ["1A", "2A", "3A", "4A"],
+        answer: "3A"
+    },
+    {
+        question: "Berapa nomor atom Aluminium (Al)?",
+        options: ["11", "12", "13", "14"],
+        answer: "13"
+    },
+    {
+        question: "Apa lambang unsur Galium?",
+        options: ["Gl", "Ga", "Ge", "Gd"],
+        answer: "Ga"
+    },
+    {
+        question: "Indium (In) termasuk golongan berapa?",
+        options: ["1A", "2A", "3A", "7A"],
+        answer: "3A"
+    },
+    {
+        question: "Berapa nomor atom Talium (Tl)?",
+        options: ["79", "80", "81", "82"],
+        answer: "81"
+    }
+
+];
+
+questions.sort(() => Math.random() - 0.5);
+let currentQuestion = 0;
+let score = 0;
+let timer;
+let timeLeft = 15;
+document.getElementById("question-card").style.display = "none";
+
+function loadQuestion() {
+
+    clearInterval(timer);
+
+timeLeft = 15;
+
+document.getElementById("timer").innerHTML =
+"⏳ " + timeLeft;
+
+timer = setInterval(() => {
+
+    timeLeft--;
+
+    document.getElementById("timer").innerHTML =
+    "⏳ " + timeLeft;
+
+   if(timeLeft <= 0){
+
+    clearInterval(timer);
+
+    currentQuestion++;
+
+    if(currentQuestion < questions.length){
+
+        loadQuestion(); // pindah ke soal berikutnya
+
+    }else{
+
+        finishQuiz();
+
+    }
+
+}
+
+},1000);
+
+    const questionElement = document.getElementById("question");
+    const answerElement = document.getElementById("answer");
+    const optionsElement = document.getElementById("options");
+
+    answerElement.innerHTML = "";
+    optionsElement.innerHTML = "";
+
+    questionElement.innerHTML =
+    `Soal ${currentQuestion + 1}/${questions.length}<br><br>${questions[currentQuestion].question}`;
+    let progress =
+((currentQuestion + 1) / questions.length) * 100;
+
+document.getElementById("progress-bar").style.width =
+progress + "%";
+
+    const shuffledOptions =
+[...questions[currentQuestion].options]
+.sort(() => Math.random() - 0.5);
+
+shuffledOptions.forEach(option => {
+
+        const optionElement =
+        document.createElement("div");
+
+        optionElement.textContent = option;
+
+        optionElement.classList.add("option");
+
+        optionElement.onclick = () =>
+        checkAnswer(option);
+
+        optionsElement.appendChild(optionElement);
+
+    });
+
+}
+
+function finishQuiz(){
+
+    let pesan = "";
+
+    if(score > 15){
+        pesan = "JOSJISSS😘😘";
+    }
+    else if(score > 10){
+        pesan = "Yuk Bisa Dikit Lagi! 💪";
+    }
+    else if(score > 5){
+        pesan = "Belajar Lagi Yaa! 📚";
+    }
+    else{
+        pesan = "Di Kelas Main HP Doang Ya 🤣🤣🤣";
+    }
+
+    document.getElementById("question").innerHTML =
+    "🏆 Quiz Selesai";
+
+    document.getElementById("options").innerHTML = "";
+
+    document.getElementById("answer").innerHTML =
+    `
+    <div style="
+        background:white;
+        color:black;
+        padding:20px;
+        border-radius:15px;
+        margin-top:15px;
+        box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    ">
+        <h2>Skor Akhir: ${score}/${questions.length}</h2>
+        <h3>${Math.round(score/questions.length*100)}%</h3>
+        <h2>${pesan}</h2>
+    </div>
+    `;
+
+    document.getElementById("restart-btn").style.display =
+    "inline-block";
+}
+function checkAnswer(selectedOption) {
+    const correctAnswer = questions[currentQuestion].answer;
+    const answerElement = document.getElementById("answer");
+clearInterval(timer);
+
+const buttons = document.querySelectorAll(".option");
+
+buttons.forEach(btn => {
+
+    btn.style.pointerEvents = "none";
+
+    if(btn.textContent === correctAnswer){
+        btn.classList.add("correct");
+    }
+
+    if(
+        btn.textContent === selectedOption &&
+        selectedOption !== correctAnswer
+    ){
+        btn.classList.add("wrong");
+    }
+
+});
+    if (selectedOption === correctAnswer) {
+        answerElement.innerHTML = "✅ Jawaban Benar!";
+        score++;
+    } else {
+        answerElement.innerHTML =
+            `❌ Jawaban Salah.<br>Jawaban yang benar: <b>${correctAnswer}</b>`;
+    }
+
+    setTimeout(() => {
+        currentQuestion++;
+
+        if(currentQuestion < questions.length){
+
+    loadQuestion();
+
+}else{
+
+    finishQuiz();
+
+}
+    }, 1500);
+}
+    
+    
+let progress =
+((currentQuestion + 1) / questions.length) * 100;
+
+document.getElementById("progress-bar").style.width =
+progress + "%";
+document.getElementById("start-btn").onclick = function(){
+
+    document.getElementById("start-screen").style.display = "none";
+
+    document.getElementById("question-card").style.display = "block";
+
+    loadQuestion();
+
+};
+
+document.getElementById("restart-btn").onclick = function(){
+
+    location.reload();
+
+};
+    </script>
+</body>
+</html>
+
